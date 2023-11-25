@@ -63,28 +63,20 @@ void setup() {
 
 
 void loop() {
-  if (!isGameOver) {
-    // Handle joystick input
-    handleJoystick();
+  // Handle joystick input
+  handleJoystick();
 
-    // Move the snake
-    moveSnake();
+  // Move the snake
+  moveSnake();
 
-    // Check for collisions
-    checkCollisions();
+  // Check for collisions
+  checkCollisions();
 
-    // Update the LED matrix
-    updateMatrix();
+  // Update the LED matrix
+  updateMatrix();
 
-    // Delay based on the snake's speed
-    delay(currentSpeed);
-  
-  } else {
-    displayScore();
-    delay(500);
-    resetGrid();
-    delay(500);
-  }
+  // Delay based on the snake's speed
+  delay(currentSpeed);
 }
 
 
@@ -141,7 +133,7 @@ void generateFood() {
 void handleJoystick() {
   xValue = analogRead(joystickXPin);
   yValue = analogRead(joystickYPin);
-  swState = digitalRead(joystickSwPin);
+  swState = not digitalRead(joystickSwPin);
 
   xMap = map(xValue, 0, 1023, -512, 512);
   yMap = map(yValue, 0, 1023, 512, -512);
@@ -161,6 +153,7 @@ void handleJoystick() {
   }
 
   Serial.println(directionStr);
+  Serial.println(swState);
 }
 
 
@@ -240,17 +233,27 @@ void gameOver() {
   snakeLength = 1;
   printText("    Game Over    ", 50);
   isGameOver = true;
+  while (isGameOver) {
+    swState = not digitalRead(joystickSwPin);
+    displayScore();
+    if (swState) {
+      isGameOver = false;
+    matrix.clear();
+    }
+  }
 }
 
 
-
-void displayScore() {
-  matrix.beginDraw();
+void displayScore() { 
+  matrix.beginDraw(); 
   matrix.stroke(0xFFFFFFFF);
-  matrix.textFont(Font_4x6);
+  matrix.textFont(Font_5x7);
   matrix.beginText(0, 1, 0xFFFFFF);
-  matrix.println(String(score)); // Convert score to string
-  matrix.endText();
-
+  matrix.println(String(score));
+  matrix.endText();  
   matrix.endDraw();
+
+  delay(500);
+  matrix.renderBitmap(grid, matrixSizeY, matrixSizeX);
+  delay(500);
 }
