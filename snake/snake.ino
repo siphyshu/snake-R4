@@ -7,15 +7,17 @@ const int matrixSizeY = 8;
 
 const int joystickXPin = A0;  // Analog pin for X-axis of the joystick
 const int joystickYPin = A1;  // Analog pin for Y-axis of the joystick
-// const int jowstickSwPin = D2;  // Digital pin for Switch of the joystick
+const int joystickSwPin = D13;  // Digital pin for Switch of the joystick
+
+int xValue, yValue, xMap, yMap, xPrev, yPrev = 0;
+boolean swState, swPrev = 0;
 
 int snakeSpeed = 170;
 int currentSpeed = snakeSpeed;
 int direction = 0;
+String directionStr = "Neutral";
 int score = 0;
 bool isGameOver = false;
-
-
 
 byte grid[matrixSizeY][matrixSizeX] = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
@@ -28,19 +30,32 @@ byte grid[matrixSizeY][matrixSizeX] = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
 
+struct Point {
+  int x;
+  int y;
+};
+
+Point snake[100];  // Maximum length of the snake
+Point food;
+int snakeLength = 1;
+
 
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  delay(1000);
+  // delay(1000);
 
   Serial.println("Snake game on Arduino R4 LED Matrix with a Dual Axis Joystick");
   matrix.begin();
   
   const String snakeASCII = "    o=.__-SNAKE-R4-___--'    ";
   printText(snakeASCII, 35);
+  
   pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(joystickXPin, INPUT);
+  pinMode(joystickYPin, INPUT);
+  pinMode(joystickSwPin, INPUT_PULLUP);
 
   initializeGame();
 }
@@ -63,6 +78,7 @@ void loop() {
 
     // Delay based on the snake's speed
     delay(currentSpeed);
+  
   } else {
     displayScore();
     delay(500);
@@ -88,17 +104,10 @@ void printText(String displayText, int speed) {
 }
 
 
-struct Point {
-  int x;
-  int y;
-};
-
-Point snake[100];  // Maximum length of the snake
-Point food;
-int snakeLength = 1;
-
 
 void initializeGame() {
+  resetGrid();
+
   // Initialize snake
   snake[0].x = 0;
   snake[0].y = 7;
@@ -108,6 +117,7 @@ void initializeGame() {
   // Initialize food
   generateFood();
 }
+
 
 
 void generateFood() {
@@ -127,22 +137,32 @@ void generateFood() {
 }
 
 
-void handleJoystick() {
-  int xValue = analogRead(joystickXPin);
-  int yValue = analogRead(joystickYPin);
 
-  if (xValue == 1023) {
+void handleJoystick() {
+  xValue = analogRead(joystickXPin);
+  yValue = analogRead(joystickYPin);
+  swState = digitalRead(joystickSwPin);
+
+  xMap = map(xValue, 0, 1023, -512, 512);
+  yMap = map(yValue, 0, 1023, 512, -512);
+
+  if (xMap <= 512 && xMap >= 10 && yMap <= 511 && yMap >= -511) {
     direction = 1; // Right
-  } else if (yValue == 0) {
+    directionStr = "Right";
+  } else if (xMap >= -512 && xMap <= -10 && yMap <= 511 && yMap >= -511) {
+    direction = 3;
+    directionStr = "Left";
+  } else if (yMap <= 512 && yMap >= 10 && xMap <= 511 && xMap >= -511) {
     direction = 2; // Up
-  } else if (xValue == 0) {
-    direction = 3; // Left
-  } else if (yValue == 1023) {
+    directionStr = "Up";
+  } else if (yMap >= -512 && yMap <= -10 && xMap <= 511 && xMap >= -511) {
     direction = 4; // Down
+    directionStr = "Down";
   }
 
-  Serial.println(direction);
+  Serial.println(directionStr);
 }
+
 
 
 void moveSnake() {
@@ -169,6 +189,7 @@ void moveSnake() {
 }
 
 
+
 void updateMatrix() {
   resetGrid();
 
@@ -177,9 +198,8 @@ void updateMatrix() {
   }
   grid[food.y][food.x] = 1;
   matrix.renderBitmap(grid, matrixSizeY, matrixSizeX);
-
-  // matrix.update();
 }
+
 
 
 void resetGrid() {
@@ -189,6 +209,7 @@ void resetGrid() {
     }
   }
 }
+
 
 
 void checkCollisions() {
@@ -212,6 +233,7 @@ void checkCollisions() {
 }
 
 
+
 void gameOver() {
   resetGrid();
   Point snake[100];
@@ -219,6 +241,7 @@ void gameOver() {
   printText("    Game Over    ", 50);
   isGameOver = true;
 }
+
 
 
 void displayScore() {
