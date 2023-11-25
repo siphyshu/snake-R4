@@ -229,19 +229,28 @@ void checkCollisions() {
 
 void gameOver() {
   resetGrid();
+  isGameOver = true;
+  
+  printText("    Game Over    ", 50);
+  for (int i = 0; i < 4; i++) {
+    displayScore();
+  }
+
   Point snake[100];
   snakeLength = 1;
-  printText("    Game Over    ", 50);
-  isGameOver = true;
-  while (isGameOver) {
-    swState = not digitalRead(joystickSwPin);
-    displayScore();
-    if (swState) {
-      isGameOver = false;
-    matrix.clear();
-    }
-  }
-}
+  snakeSpeed = 170;
+  currentSpeed = snakeSpeed;
+  score = 0;
+
+  // while (isGameOver) {
+  //   swState = not digitalRead(joystickSwPin);
+  //   displayScore();
+  //   if (swState) {
+  //     isGameOver = false;
+  //   matrix.clear();
+  //   }
+  // }
+gi}
 
 
 void displayScore() { 
