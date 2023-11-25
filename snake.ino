@@ -207,7 +207,7 @@ void checkCollisions() {
 
     generateFood();
 
-    currentSpeed -= 10;na
+    currentSpeed -= 5;
   }
 }
 
