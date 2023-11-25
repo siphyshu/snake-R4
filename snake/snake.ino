@@ -14,8 +14,7 @@ boolean swState, swPrev = 0;
 
 int snakeSpeed = 170;
 int currentSpeed = snakeSpeed;
-int direction = 0;
-String directionStr = "Neutral";
+int direction, directionPrev = 0;
 int score = 0;
 bool isGameOver = false;
 
@@ -100,6 +99,14 @@ void printText(String displayText, int speed) {
 void initializeGame() {
   resetGrid();
 
+  Point snake[100];
+  snakeLength = 1;
+  snakeSpeed = 170;
+  currentSpeed = snakeSpeed;
+  score = 0;
+  direction, directionPrev = 0;
+  isGameOver = false;
+
   // Initialize snake
   snake[0].x = 0;
   snake[0].y = 7;
@@ -138,22 +145,22 @@ void handleJoystick() {
   xMap = map(xValue, 0, 1023, -512, 512);
   yMap = map(yValue, 0, 1023, 512, -512);
 
+  // disallow moving in the opposite direction of current direction while the game is running
   if (xMap <= 512 && xMap >= 10 && yMap <= 511 && yMap >= -511) {
-    direction = 1; // Right
-    directionStr = "Right";
+    if ((!isGameOver && directionPrev != 3) || isGameOver) { direction = 1; } // Right 
   } else if (xMap >= -512 && xMap <= -10 && yMap <= 511 && yMap >= -511) {
-    direction = 3;
-    directionStr = "Left";
+    if ((!isGameOver && directionPrev != 1) || isGameOver) { direction = 3; } // Left
   } else if (yMap <= 512 && yMap >= 10 && xMap <= 511 && xMap >= -511) {
-    direction = 2; // Up
-    directionStr = "Up";
+    if ((!isGameOver && directionPrev != 4) || isGameOver) { direction = 2; } // Up
   } else if (yMap >= -512 && yMap <= -10 && xMap <= 511 && xMap >= -511) {
-    direction = 4; // Down
-    directionStr = "Down";
+    if ((!isGameOver && directionPrev != 2) || isGameOver) { direction = 4; } // Down
   }
 
-  Serial.println(directionStr);
-  Serial.println(swState);
+  if (!isGameOver) {
+    directionPrev = direction;
+  }
+
+  Serial.println(String(direction) + " | " + String(directionPrev));
 }
 
 
@@ -228,29 +235,16 @@ void checkCollisions() {
 
 
 void gameOver() {
-  resetGrid();
   isGameOver = true;
+  resetGrid();
   
   printText("    Game Over    ", 50);
   for (int i = 0; i < 4; i++) {
     displayScore();
   }
 
-  Point snake[100];
-  snakeLength = 1;
-  snakeSpeed = 170;
-  currentSpeed = snakeSpeed;
-  score = 0;
-
-  // while (isGameOver) {
-  //   swState = not digitalRead(joystickSwPin);
-  //   displayScore();
-  //   if (swState) {
-  //     isGameOver = false;
-  //   matrix.clear();
-  //   }
-  // }
-gi}
+  initializeGame();
+}
 
 
 void displayScore() { 
