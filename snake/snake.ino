@@ -21,7 +21,7 @@ int snakeSpeed = 170;
 int maxSpeed = 70;
 int currentSpeed = snakeSpeed;
 int direction, directionPrev = 0;
-int score = 0;
+int score, highScore = 0;
 bool isGameOver = false;
 
 byte grid[matrixSizeY][matrixSizeX] = {
@@ -244,10 +244,14 @@ void checkCollisions() {
 void gameOver() {
   isGameOver = true;
   resetGrid();
+
+  if (score >= highScore) {
+    highScore = score;
+  }
   
   printText("    Game Over    ", 35);
   for (int i = 0; i < 4; i++) {
-    displayScore();
+    displayScore(true, false);
   }
 
   continuePlaying();
@@ -256,23 +260,20 @@ void gameOver() {
 
 
 
-void displayScore() { 
-  // matrix.beginDraw(); 
-  // matrix.stroke(0xFFFFFFFF);
-  // matrix.textFont(Font_5x7);
-  // matrix.beginText(0, 1, 0xFFFFFF);
-  // matrix.println(String(score));
-  // matrix.endText();
-  // matrix.endDraw();
-
-  // delay(500);
-  // matrix.renderBitmap(grid, matrixSizeY, matrixSizeX);
-  // delay(500);
+void displayScore(bool toBlink, bool displayHighScore) { 
   String scoreText;
-  if (score < 10) {
-    scoreText = "0" + String(score);
+  if (!displayHighScore) {
+    if (score < 10) {
+      scoreText = "0" + String(score);
+    } else {
+      scoreText = String(score);
+    }
   } else {
-    scoreText = String(score);
+    if (highScore < 10) {
+      scoreText = "0" + String(highScore);
+    } else {
+      scoreText = String(highScore);
+    }
   }
 
   uint8_t scoreboard[8][12] = {
@@ -567,45 +568,12 @@ void displayScore() {
 
   matrix.renderBitmap(scoreboard, 8, 12);
   delay(500);
-  matrix.renderBitmap(grid, 8, 12);
-  delay(500);
+  if (toBlink) {
+    matrix.renderBitmap(grid, 8, 12);
+    delay(500);
+  }
 }
 
-// void setNumberFrames(uint8_t[8][12] matrixFrame, String numberText) {
-//   int ones = numberText.charAt(numberText.length() - 1) - '0';
-//   int tens = numberText.charAt(numberText.length() - 2) - '0';
-  
-//   // set the ones place number on right side of frame
-//   switch (ones) {
-//     case 0:
-//       matrixFrame[1][2] = 0;
-//       matrixFrame[1][3] = 0;
-//       matrixFrame[2][1] = 0;
-//       matrixFrame[2][4] = 0;
-//       matrixFrame[3][1] = 0;
-//       matrixFrame[3][4] = 0;
-//       matrixFrame[4][1] = 0;
-//       matrixFrame[4][4] = 0;
-//       matrixFrame[5][1] = 0;
-//       matrixFrame[5][4] = 0;
-//       matrixFrame[6][2] = 0;
-//       matrixFrame[6][3] = 0;
-//       break;
-//     case 1:
-//       matrixFrame[1][3] = 0;
-//       matrixFrame[2][2] = 0;
-//       matrixFrame[2][3] = 0;
-//       matrixFrame[3][1] = 0;
-//       matrixFrame[3][3] = 0;
-//       matrixFrame[4][3] = 0;
-//       matrixFrame[5][3] = 0;
-//       matrixFrame[6][1] = 0;
-//       matrixFrame[6][2] = 0;
-//       matrixFrame[6][3] = 0;
-//       matrixFrame[6][4] = 0;
-//       break;
-//   }
-// }
 
 
 void continuePlaying() {
@@ -629,7 +597,10 @@ void continuePlaying() {
     matrix.loadSequence(no_option);
     matrix.play();
     delay(1500);
-    printText("    thx for playing!        made by siphyshu    ")
+    printText("    thx for playing!        made by siphyshu    ", 35);
+    while (true) {
+      displayScore(false, true);
+    }
   } else if (selectedOption == "yes") {
     matrix.loadSequence(yes_option);
     matrix.play();
