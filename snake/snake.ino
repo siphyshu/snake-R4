@@ -1,5 +1,10 @@
 #include "ArduinoGraphics.h"
 #include "Arduino_LED_Matrix.h"
+
+#include "continue_playing.h"
+#include "yes_option.h"
+#include "no_option.h"
+
 ArduinoLEDMatrix matrix;
 
 const int matrixSizeX = 12;
@@ -243,8 +248,10 @@ void gameOver() {
     displayScore();
   }
 
+  continuePlaying();
   initializeGame();
 }
+
 
 
 void displayScore() { 
@@ -259,4 +266,37 @@ void displayScore() {
   delay(500);
   matrix.renderBitmap(grid, matrixSizeY, matrixSizeX);
   delay(500);
+}
+
+
+
+void continuePlaying() {
+  matrix.loadSequence(continue_playing);
+  matrix.renderFrame(2);
+  String selectedOption = "yes";
+
+  while (!swState) {
+    handleJoystick();
+    if (direction == 3) {
+      matrix.renderFrame(0);
+      selectedOption = "yes";
+    } else if (direction == 1) {
+      matrix.renderFrame(1);
+      selectedOption = "no";
+    }
+    delay(100);
+  }
+
+  if (selectedOption == "no") {
+    matrix.loadSequence(no_option);
+    matrix.play();
+    delay(1000);
+    while (true) {
+      displayScore();
+    }
+  } else if (selectedOption == "yes") {
+    matrix.loadSequence(yes_option);
+    matrix.play();
+    delay(1000);
+  }
 }
