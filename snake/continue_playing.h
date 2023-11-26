@@ -1,14 +1,14 @@
 const uint32_t continue_playing[][4] = {
 	{
-		0xfc0fa0ac,
-		0xc8aaeca8,
-		0xaafc0fa0,
+		0x7c055,
+		0x84547544,
+		0x547c0000,
 		66
 	},
 	{
-		0x3f05f53,
-		0x37551357,
-		0x5503f05f,
+		0x3e2a,
+		0x63aa0aa3,
+		0xaa03e000,
 		66
 	}
 };

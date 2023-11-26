@@ -165,7 +165,7 @@ void handleJoystick() {
     directionPrev = direction;
   }
 
-  Serial.println(String(direction) + " | " + String(directionPrev));
+  // Serial.println(String(direction) + " | " + String(directionPrev));
 }
 
 
@@ -257,19 +257,355 @@ void gameOver() {
 
 
 void displayScore() { 
-  matrix.beginDraw(); 
-  matrix.stroke(0xFFFFFFFF);
-  matrix.textFont(Font_5x7);
-  matrix.beginText(0, 1, 0xFFFFFF);
-  matrix.println(String(score));
-  matrix.endText();  
-  matrix.endDraw();
+  // matrix.beginDraw(); 
+  // matrix.stroke(0xFFFFFFFF);
+  // matrix.textFont(Font_5x7);
+  // matrix.beginText(0, 1, 0xFFFFFF);
+  // matrix.println(String(score));
+  // matrix.endText();
+  // matrix.endDraw();
 
+  // delay(500);
+  // matrix.renderBitmap(grid, matrixSizeY, matrixSizeX);
+  // delay(500);
+  String scoreText;
+  if (score < 10) {
+    scoreText = "0" + String(score);
+  } else {
+    scoreText = String(score);
+  }
+
+  uint8_t scoreboard[8][12] = {
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+  };
+
+  // set number frames code here
+  int ones = scoreText.charAt(scoreText.length()-1) - '0';
+  int tens = scoreText.charAt(scoreText.length()-2) - '0';
+  Serial.println(String(tens)+String(ones));
+
+  switch (tens) {
+    case 0:
+      scoreboard[1][2] = 1;
+      scoreboard[1][3] = 1;
+      scoreboard[2][1] = 1;
+      scoreboard[2][4] = 1;
+      scoreboard[3][1] = 1;
+      scoreboard[3][4] = 1;
+      scoreboard[4][1] = 1;
+      scoreboard[4][4] = 1;
+      scoreboard[5][1] = 1;
+      scoreboard[5][4] = 1;
+      scoreboard[6][2] = 1;
+      scoreboard[6][3] = 1;
+      break;
+    case 1:
+      scoreboard[1][3] = 1;
+      scoreboard[2][2] = 1;
+      scoreboard[2][3] = 1;
+      scoreboard[3][1] = 1;
+      scoreboard[3][3] = 1;
+      scoreboard[4][3] = 1;
+      scoreboard[5][3] = 1;
+      scoreboard[6][1] = 1;
+      scoreboard[6][2] = 1;
+      scoreboard[6][3] = 1;
+      scoreboard[6][4] = 1;
+      break;
+    case 2:
+      scoreboard[1][1] = 1;
+      scoreboard[1][2] = 1;
+      scoreboard[1][3] = 1;
+      scoreboard[2][4] = 1;
+      scoreboard[3][3] = 1;
+      scoreboard[3][4] = 1;
+      scoreboard[4][1] = 1;
+      scoreboard[4][2] = 1;
+      scoreboard[5][1] = 1;
+      scoreboard[6][2] = 1;
+      scoreboard[6][3] = 1;
+      scoreboard[6][4] = 1;
+      break;
+    case 3:
+      scoreboard[1][1] = 1;
+      scoreboard[1][2] = 1;
+      scoreboard[1][3] = 1;
+      scoreboard[2][4] = 1;
+      scoreboard[3][3] = 1;
+      scoreboard[4][2] = 1;
+      scoreboard[4][4] = 1;
+      scoreboard[5][4] = 1;
+      scoreboard[6][1] = 1;
+      scoreboard[6][2] = 1;
+      scoreboard[6][3] = 1;
+      break;
+    case 4:
+      scoreboard[1][1] = 1;
+      scoreboard[1][4] = 1;
+      scoreboard[2][1] = 1;
+      scoreboard[2][4] = 1;
+      scoreboard[3][1] = 1;
+      scoreboard[3][3] = 1;
+      scoreboard[3][4] = 1;
+      scoreboard[4][2] = 1;
+      scoreboard[4][4] = 1;
+      scoreboard[5][4] = 1;
+      scoreboard[6][4] = 1;
+      break;
+    case 5:
+      scoreboard[1][2] = 1;
+      scoreboard[1][3] = 1;
+      scoreboard[1][4] = 1;
+      scoreboard[2][1] = 1;
+      scoreboard[3][1] = 1;
+      scoreboard[3][2] = 1;
+      scoreboard[4][3] = 1;
+      scoreboard[4][4] = 1;
+      scoreboard[5][4] = 1;
+      scoreboard[6][1] = 1;
+      scoreboard[6][2] = 1;
+      scoreboard[6][3] = 1;
+      break;
+    case 6:
+      scoreboard[1][2] = 1;
+      scoreboard[1][3] = 1;
+      scoreboard[1][4] = 1;
+      scoreboard[2][1] = 1;
+      scoreboard[3][1] = 1;
+      scoreboard[3][3] = 1;
+      scoreboard[4][1] = 1;
+      scoreboard[4][2] = 1;
+      scoreboard[4][4] = 1;
+      scoreboard[5][1] = 1;
+      scoreboard[5][4] = 1;
+      scoreboard[6][2] = 1;
+      scoreboard[6][3] = 1;
+      break;
+    case 7:
+      scoreboard[1][1] = 1;
+      scoreboard[1][2] = 1;
+      scoreboard[1][3] = 1;
+      scoreboard[2][4] = 1;
+      scoreboard[3][4] = 1;
+      scoreboard[4][3] = 1;
+      scoreboard[5][2] = 1;
+      scoreboard[6][1] = 1;
+      break;
+    case 8:
+      scoreboard[1][2] = 1;
+      scoreboard[1][3] = 1;
+      scoreboard[2][1] = 1;
+      scoreboard[2][4] = 1;
+      scoreboard[3][2] = 1;
+      scoreboard[3][4] = 1;
+      scoreboard[4][1] = 1;
+      scoreboard[4][3] = 1;
+      scoreboard[5][1] = 1;
+      scoreboard[5][4] = 1;
+      scoreboard[6][2] = 1;
+      scoreboard[6][3] = 1;
+      break;
+    case 9:
+      scoreboard[1][2] = 1;
+      scoreboard[1][3] = 1;
+      scoreboard[2][1] = 1;
+      scoreboard[2][4] = 1;
+      scoreboard[3][1] = 1;
+      scoreboard[3][2] = 1;
+      scoreboard[3][4] = 1;
+      scoreboard[4][3] = 1;
+      scoreboard[4][4] = 1;
+      scoreboard[5][4] = 1;
+      scoreboard[6][1] = 1;
+      scoreboard[6][2] = 1;
+      scoreboard[6][3] = 1;
+  }
+
+  switch (ones) {
+    case 0:
+      scoreboard[1][2+6] = 1;
+      scoreboard[1][3+6] = 1;
+      scoreboard[2][1+6] = 1;
+      scoreboard[2][4+6] = 1;
+      scoreboard[3][1+6] = 1;
+      scoreboard[3][4+6] = 1;
+      scoreboard[4][1+6] = 1;
+      scoreboard[4][4+6] = 1;
+      scoreboard[5][1+6] = 1;
+      scoreboard[5][4+6] = 1;
+      scoreboard[6][2+6] = 1;
+      scoreboard[6][3+6] = 1;
+      break;
+    case 1:
+      scoreboard[1][3+6] = 1;
+      scoreboard[2][2+6] = 1;
+      scoreboard[2][3+6] = 1;
+      scoreboard[3][1+6] = 1;
+      scoreboard[3][3+6] = 1;
+      scoreboard[4][3+6] = 1;
+      scoreboard[5][3+6] = 1;
+      scoreboard[6][1+6] = 1;
+      scoreboard[6][2+6] = 1;
+      scoreboard[6][3+6] = 1;
+      scoreboard[6][4+6] = 1;
+      break;
+    case 2:
+      scoreboard[1][1+6] = 1;
+      scoreboard[1][2+6] = 1;
+      scoreboard[1][3+6] = 1;
+      scoreboard[2][4+6] = 1;
+      scoreboard[3][3+6] = 1;
+      scoreboard[3][4+6] = 1;
+      scoreboard[4][1+6] = 1;
+      scoreboard[4][2+6] = 1;
+      scoreboard[5][1+6] = 1;
+      scoreboard[6][2+6] = 1;
+      scoreboard[6][3+6] = 1;
+      scoreboard[6][4+6] = 1;
+      break;
+    case 3:
+      scoreboard[1][1+6] = 1;
+      scoreboard[1][2+6] = 1;
+      scoreboard[1][3+6] = 1;
+      scoreboard[2][4+6] = 1;
+      scoreboard[3][3+6] = 1;
+      scoreboard[4][2+6] = 1;
+      scoreboard[4][4+6] = 1;
+      scoreboard[5][4+6] = 1;
+      scoreboard[6][1+6] = 1;
+      scoreboard[6][2+6] = 1;
+      scoreboard[6][3+6] = 1;
+      break;
+    case 4:
+      scoreboard[1][1+6] = 1;
+      scoreboard[1][4+6] = 1;
+      scoreboard[2][1+6] = 1;
+      scoreboard[2][4+6] = 1;
+      scoreboard[3][1+6] = 1;
+      scoreboard[3][3+6] = 1;
+      scoreboard[3][4+6] = 1;
+      scoreboard[4][2+6] = 1;
+      scoreboard[4][4+6] = 1;
+      scoreboard[5][4+6] = 1;
+      scoreboard[6][4+6] = 1;
+      break;
+    case 5:
+      scoreboard[1][2+6] = 1;
+      scoreboard[1][3+6] = 1;
+      scoreboard[1][4+6] = 1;
+      scoreboard[2][1+6] = 1;
+      scoreboard[3][1+6] = 1;
+      scoreboard[3][2+6] = 1;
+      scoreboard[4][3+6] = 1;
+      scoreboard[4][4+6] = 1;
+      scoreboard[5][4+6] = 1;
+      scoreboard[6][1+6] = 1;
+      scoreboard[6][2+6] = 1;
+      scoreboard[6][3+6] = 1;
+      break;
+    case 6:
+      scoreboard[1][2+6] = 1;
+      scoreboard[1][3+6] = 1;
+      scoreboard[1][4+6] = 1;
+      scoreboard[2][1+6] = 1;
+      scoreboard[3][1+6] = 1;
+      scoreboard[3][3+6] = 1;
+      scoreboard[4][1+6] = 1;
+      scoreboard[4][2+6] = 1;
+      scoreboard[4][4+6] = 1;
+      scoreboard[5][1+6] = 1;
+      scoreboard[5][4+6] = 1;
+      scoreboard[6][2+6] = 1;
+      scoreboard[6][3+6] = 1;
+      break;
+    case 7:
+      scoreboard[1][1+6] = 1;
+      scoreboard[1][2+6] = 1;
+      scoreboard[1][3+6] = 1;
+      scoreboard[2][4+6] = 1;
+      scoreboard[3][4+6] = 1;
+      scoreboard[4][3+6] = 1;
+      scoreboard[5][2+6] = 1;
+      scoreboard[6][1+6] = 1;
+      break;
+    case 8:
+      scoreboard[1][2+6] = 1;
+      scoreboard[1][3+6] = 1;
+      scoreboard[2][1+6] = 1;
+      scoreboard[2][4+6] = 1;
+      scoreboard[3][2+6] = 1;
+      scoreboard[3][4+6] = 1;
+      scoreboard[4][1+6] = 1;
+      scoreboard[4][3+6] = 1;
+      scoreboard[5][1+6] = 1;
+      scoreboard[5][4+6] = 1;
+      scoreboard[6][2+6] = 1;
+      scoreboard[6][3+6] = 1;
+      break;
+    case 9:
+      scoreboard[1][2+6] = 1;
+      scoreboard[1][3+6] = 1;
+      scoreboard[2][1+6] = 1;
+      scoreboard[2][4+6] = 1;
+      scoreboard[3][1+6] = 1;
+      scoreboard[3][2+6] = 1;
+      scoreboard[3][4+6] = 1;
+      scoreboard[4][3+6] = 1;
+      scoreboard[4][4+6] = 1;
+      scoreboard[5][4+6] = 1;
+      scoreboard[6][1+6] = 1;
+      scoreboard[6][2+6] = 1;
+      scoreboard[6][3+6] = 1;
+  }
+
+  matrix.renderBitmap(scoreboard, 8, 12);
   delay(500);
-  matrix.renderBitmap(grid, matrixSizeY, matrixSizeX);
+  matrix.renderBitmap(grid, 8, 12);
   delay(500);
 }
 
+// void setNumberFrames(uint8_t[8][12] matrixFrame, String numberText) {
+//   int ones = numberText.charAt(numberText.length() - 1) - '0';
+//   int tens = numberText.charAt(numberText.length() - 2) - '0';
+  
+//   // set the ones place number on right side of frame
+//   switch (ones) {
+//     case 0:
+//       matrixFrame[1][2] = 0;
+//       matrixFrame[1][3] = 0;
+//       matrixFrame[2][1] = 0;
+//       matrixFrame[2][4] = 0;
+//       matrixFrame[3][1] = 0;
+//       matrixFrame[3][4] = 0;
+//       matrixFrame[4][1] = 0;
+//       matrixFrame[4][4] = 0;
+//       matrixFrame[5][1] = 0;
+//       matrixFrame[5][4] = 0;
+//       matrixFrame[6][2] = 0;
+//       matrixFrame[6][3] = 0;
+//       break;
+//     case 1:
+//       matrixFrame[1][3] = 0;
+//       matrixFrame[2][2] = 0;
+//       matrixFrame[2][3] = 0;
+//       matrixFrame[3][1] = 0;
+//       matrixFrame[3][3] = 0;
+//       matrixFrame[4][3] = 0;
+//       matrixFrame[5][3] = 0;
+//       matrixFrame[6][1] = 0;
+//       matrixFrame[6][2] = 0;
+//       matrixFrame[6][3] = 0;
+//       matrixFrame[6][4] = 0;
+//       break;
+//   }
+// }
 
 
 void continuePlaying() {
@@ -292,13 +628,11 @@ void continuePlaying() {
   if (selectedOption == "no") {
     matrix.loadSequence(no_option);
     matrix.play();
-    delay(1000);
-    while (true) {
-      displayScore();
-    }
+    delay(1500);
+    printText("    thx for playing!        made by siphyshu    ")
   } else if (selectedOption == "yes") {
     matrix.loadSequence(yes_option);
     matrix.play();
-    delay(1000);
+    delay(1500);
   }
 }
