@@ -18,6 +18,7 @@ int xValue, yValue, xMap, yMap, xPrev, yPrev = 0;
 boolean swState, swPrev = 0;
 
 int snakeSpeed = 170;
+int maxSpeed = 70;
 int currentSpeed = snakeSpeed;
 int direction, directionPrev = 0;
 int score = 0;
@@ -48,7 +49,6 @@ int snakeLength = 1;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  // delay(1000);
 
   Serial.println("Snake game on Arduino R4 LED Matrix with a Dual Axis Joystick");
   matrix.begin();
@@ -233,7 +233,9 @@ void checkCollisions() {
 
     generateFood();
 
-    currentSpeed -= 5;
+    if (currentSpeed > maxSpeed) {
+      currentSpeed -= 5;
+    }
   }
 }
 
@@ -243,7 +245,7 @@ void gameOver() {
   isGameOver = true;
   resetGrid();
   
-  printText("    Game Over    ", 50);
+  printText("    Game Over    ", 35);
   for (int i = 0; i < 4; i++) {
     displayScore();
   }
