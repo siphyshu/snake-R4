@@ -20,6 +20,6 @@ Connect Arduino R4's 5V, GND, A0, A1, and D2 to the PS2 Joystick module's 5V, GN
 
 These are my ideas for the project, PRs are welcomed if anybody wants to work on these.
 
-* This can most likely be repurposed for any arduino connected with an LED Matrix, will have to see about that though
+* This can be modified for any arduino connected with an LED Matrix, that can be explored
 * See how a blinking head on the snake looks. Does it provide clearer visuals of the snake's direction?
 * Adding an infinite AI playing mode could be fun and can be used as a screensaver playing in the background
