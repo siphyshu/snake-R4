@@ -12,7 +12,7 @@ const int matrixSizeY = 8;
 
 const int joystickXPin = A0;  // Analog pin for X-axis of the joystick
 const int joystickYPin = A1;  // Analog pin for Y-axis of the joystick
-const int joystickSwPin = D13;  // Digital pin for Switch of the joystick
+const int joystickSwPin = D2;  // Digital pin for Switch of the joystick
 
 int xValue, yValue, xMap, yMap, xPrev, yPrev = 0;
 boolean swState, swPrev = 0;
