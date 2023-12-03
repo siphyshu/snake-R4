@@ -5,7 +5,7 @@
 #include "yes_option.h"
 #include "no_option.h"
 
-ArduinoLEDMatrix matrix;
+ArduinoLEDMatrix matrix;  
 
 const int matrixSizeX = 12;
 const int matrixSizeY = 8;
