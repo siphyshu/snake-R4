@@ -6,15 +6,19 @@ https://github.com/siphyshu/snake-R4/assets/52672162/5f99de7c-5d51-46b6-a69e-d31
 
 ## Requirements
 
-1. An [Arduino UNO R4 WIFI](https://store.arduino.cc/products/uno-r4-wifi)
-2. A [Dual-axis joystick controller](https://robu.in/product/joystick-module-ps2-breakout-sensor/)
+1. [Arduino UNO R4 WIFI](https://store.arduino.cc/products/uno-r4-wifi)
+2. [Dual-Axis joystick controller](https://robu.in/product/joystick-module-ps2-breakout-sensor/)
 3. 5 connecting wires
 
 ## Setup
 
 Connect Arduino R4's 5V, GND, A0, A1, and D2 to the PS2 Joystick module's 5V, GND, URX, URY, and SW respectively.
 
-<img src="https://github.com/siphyshu/snake-R4/assets/52672162/23e4b67c-cdf1-4ca2-9919-640c709266d0" width="600">
+<img src="https://github.com/siphyshu/snake-R4/assets/52672162/23e4b67c-cdf1-4ca2-9919-640c709266d0" width="500">
+
+## Flowchart
+
+<img src="https://github.com/siphyshu/snake-R4/assets/52672162/bc6d4910-c166-4104-881e-f4880cef92a3" width="500">
 
 ## Notes and TODO
 
