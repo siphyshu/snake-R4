@@ -20,7 +20,7 @@ Connect Arduino R4's 5V, GND, A0, A1, and D2 to the PS2 Joystick module's 5V, GN
 
 ## Flowchart
 
-<img src="https://github.com/siphyshu/snake-R4/assets/52672162/bc6d4910-c166-4104-881e-f4880cef92a3" width="500">
+<img src="https://raw.githubusercontent.com/siphyshu/snake-R4/main/flowchart.png" width="600">
 
 ## Notes and TODO
 
