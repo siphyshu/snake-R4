@@ -4,6 +4,8 @@ A Snake game in Arduino UNO R4's LED matrix with a joystick controller
 
 https://github.com/siphyshu/snake-R4/assets/52672162/5f99de7c-5d51-46b6-a69e-d3127845f01c
 
+###### _*sfx in demo video purely for viewing purposes_
+
 ## Requirements
 
 1. [Arduino UNO R4 WIFI](https://store.arduino.cc/products/uno-r4-wifi)
