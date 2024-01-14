@@ -6,6 +6,8 @@ https://github.com/siphyshu/snake-R4/assets/52672162/5f99de7c-5d51-46b6-a69e-d31
 
 ###### _*sfx in demo video purely for viewing purposes_
 
+Read the detailed technical article here: [medium.com/@siphyshu/i-made-th...](https://medium.com/@siphyshu/i-made-the-snake-game-on-the-arduino-uno-r4-led-matrix-with-a-joystick-controller-5127c28f8a38)
+
 ## Requirements
 
 1. [Arduino UNO R4 WIFI](https://store.arduino.cc/products/uno-r4-wifi)
