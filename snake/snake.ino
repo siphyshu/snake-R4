@@ -14,6 +14,9 @@ const int joystickXPin = A0;  // Analog pin for X-axis of the joystick
 const int joystickYPin = A1;  // Analog pin for Y-axis of the joystick
 const int debugPin = D13; // Digital pin for debugging (connect with GND to enable)
 const int joystickSwPin = D12;  // Digital pin for Switch of the joystick
+const int joystickDeadzone = 30; // Defines the deadzone area around the joystick's idle position to account for potentiometer inaccuracies.
+                                  // Increase this if there are unintentional direction changes in one or two specific directions.
+                                  // Decrease this if joystick feels unresponsive or sluggish when changing directions.
 
 int xValue, yValue, xMap, yMap, xPrev, yPrev = 0;
 boolean swState, swPrev = 0;
@@ -155,13 +158,13 @@ void handleJoystick() {
   yMap = map(yValue, 0, 1023, 512, -512);
 
   // disallow moving in the opposite direction of current direction while the game is running
-  if (xMap <= 512 && xMap >= 10 && yMap <= 511 && yMap >= -511) {
+  if (xMap <= 512 && xMap >= joystickDeadzone && yMap <= 511 && yMap >= -511) {
     if ((!isGameOver && directionPrev != 3) || isGameOver) { direction = 1; } // Right 
-  } else if (xMap >= -512 && xMap <= -10 && yMap <= 511 && yMap >= -511) {
+  } else if (xMap >= -512 && xMap <= -joystickDeadzone && yMap <= 511 && yMap >= -511) {
     if ((!isGameOver && directionPrev != 1) || isGameOver) { direction = 3; } // Left
-  } else if (yMap <= 512 && yMap >= 10 && xMap <= 511 && xMap >= -511) {
+  } else if (yMap <= 512 && yMap >= joystickDeadzone && xMap <= 511 && xMap >= -511) {
     if ((!isGameOver && directionPrev != 4) || isGameOver) { direction = 2; } // Up
-  } else if (yMap >= -512 && yMap <= -10 && xMap <= 511 && xMap >= -511) {
+  } else if (yMap >= -512 && yMap <= -joystickDeadzone && xMap <= 511 && xMap >= -511) {
     if ((!isGameOver && directionPrev != 2) || isGameOver) { direction = 4; } // Down
   }
 
@@ -304,7 +307,7 @@ void displayScore(bool toBlink, bool displayHighScore) {
   // set number frames code here
   int ones = scoreText.charAt(scoreText.length()-1) - '0';
   int tens = scoreText.charAt(scoreText.length()-2) - '0';
-  Serial.println(String(tens)+String(ones));
+  // Serial.println(String(tens)+String(ones));
 
   switch (tens) {
     case 0:
