@@ -12,10 +12,12 @@ const int matrixSizeY = 8;
 
 const int joystickXPin = A0;  // Analog pin for X-axis of the joystick
 const int joystickYPin = A1;  // Analog pin for Y-axis of the joystick
-const int joystickSwPin = D2;  // Digital pin for Switch of the joystick
+const int debugPin = D13; // Digital pin for debugging (connect with GND to enable)
+const int joystickSwPin = D12;  // Digital pin for Switch of the joystick
 
 int xValue, yValue, xMap, yMap, xPrev, yPrev = 0;
 boolean swState, swPrev = 0;
+boolean debugState = 0;
 
 int snakeSpeed = 170;
 int maxSpeed = 70;
@@ -60,6 +62,7 @@ void setup() {
   pinMode(joystickXPin, INPUT);
   pinMode(joystickYPin, INPUT);
   pinMode(joystickSwPin, INPUT_PULLUP);
+  pinMode(debugPin, INPUT_PULLUP);
 
   initializeGame();
 }
@@ -146,6 +149,7 @@ void handleJoystick() {
   xValue = analogRead(joystickXPin);
   yValue = analogRead(joystickYPin);
   swState = not digitalRead(joystickSwPin);
+  debugState = not digitalRead(debugPin);
 
   xMap = map(xValue, 0, 1023, -512, 512);
   yMap = map(yValue, 0, 1023, 512, -512);
@@ -165,7 +169,17 @@ void handleJoystick() {
     directionPrev = direction;
   }
 
-  // Serial.println(String(direction) + " | " + String(directionPrev));
+  if (debugState) {
+    if (direction == 1) {
+      Serial.println("Right");
+    } else if (direction == 2) {
+      Serial.println("Up");
+    } else if (direction == 3) {
+      Serial.println("Left");
+    } else if (direction == 4) {
+      Serial.println("Down");
+    }
+  }
 }
 
 
