@@ -14,7 +14,7 @@ const int joystickXPin = A0;  // Analog pin for X-axis of the joystick
 const int joystickYPin = A1;  // Analog pin for Y-axis of the joystick
 const int debugPin = D13; // Digital pin for debugging (connect with GND to enable)
 const int joystickSwPin = D12;  // Digital pin for Switch of the joystick
-const int joystickDeadzone = 30; // Defines the deadzone area around the joystick's idle position to account for potentiometer inaccuracies.
+const int joystickDeadzone = 200; // Defines the deadzone area around the joystick's idle position to account for potentiometer inaccuracies.
                                   // Increase this if there are unintentional direction changes in one or two specific directions.
                                   // Decrease this if joystick feels unresponsive or sluggish when changing directions.
 
@@ -595,26 +595,70 @@ void displayScore(bool toBlink, bool displayHighScore) {
 
 void continuePlaying() {
   matrix.loadSequence(continue_playing);
-  matrix.renderFrame(2);
+  matrix.renderFrame(0); // Default to "Yes" option
   String selectedOption = "yes";
-
-  while (!swState) {
+  
+  // Reset button state for clean detection
+  swState = false;
+  
+  // Variables to track hold duration
+  unsigned long holdStartTime = 0;
+  bool isHolding = false;
+  const unsigned long HOLD_DURATION = 2000; // 2 seconds to confirm
+  
+  while (true) {
     handleJoystick();
+    unsigned long currentTime = millis();
+    
+    // Use left/right to navigate options
     if (direction == 3) {
       matrix.renderFrame(0);
       selectedOption = "yes";
+      // Reset holding when changing options
+      isHolding = false;
     } else if (direction == 1) {
       matrix.renderFrame(1);
       selectedOption = "no";
+      // Reset holding when changing options
+      isHolding = false;
     }
-    delay(100);
+    
+    // Detect and track downward hold
+    if (direction == 4) {
+      if (!isHolding) {
+        isHolding = true;
+        holdStartTime = currentTime;
+      } else {
+        // Calculate hold duration
+        unsigned long holdDuration = currentTime - holdStartTime;
+        
+        // If held long enough, confirm selection
+        if (holdDuration >= HOLD_DURATION) {
+          break; // Selection confirmed
+        }
+      }
+    } else {
+      isHolding = false;
+    }
+    
+    // Press button to select (keep this for compatibility)
+    if (swState) {
+      break;
+    }
+    
+    delay(50); // Faster refresh for more responsive feedback
   }
 
+  // Show brief confirmation
+  resetGrid();
+  delay(300);
+  
+  // Process selected option
   if (selectedOption == "no") {
     matrix.loadSequence(no_option);
     matrix.play();
     delay(1500);
-    printText("    thx for playing!        made by siphyshu    ", 35);
+    printText("    thx for playing!        made by siphyshu <3   ", 35);
     while (true) {
       displayScore(false, true);
     }
